@@ -1,0 +1,22 @@
+Package: RIGATONI
+Type: Package
+Title: Rapid Identification of Genomic Alterations in Tumors Obscuring Neoantigens from the Immune system
+Version: 0.1.0
+Authors@R: 
+    person("Raven", "Vella", , "raven.vella@osumc.edu", role = c("aut", "cre"))
+Description: RIGATONI is a RNAseq analysis tools which was developed using 
+    RNAseq, histology images, and protein interactions networks to annotate the
+    function of different genomic alterations and their predicted effects on the
+    tumor immune microenvironment.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Imports: 
+LazyData: true
+Depends: 
+    R (>= 2.10),
+    glmnet,
+    ordinalForest,
+    ciTools,
+    DGEobj.utils,
+RoxygenNote: 7.2.3
