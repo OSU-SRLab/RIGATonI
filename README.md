@@ -35,4 +35,4 @@ You can also run RIGATONI with a single function and default settings using the 
 ```{r}
 runRIGATONI(gene_of_interest, ControlRNA, MutantRNA)
 ```
-The gene of interest is an HGNC symbol in the form of a character string. ControlRNA and MutantRNA should be dataframes with rownames as gene names and colunm names as sample IDs. We expect the gene names to be the same for both dataframes and we expect the gene names to be in the HGNC symbol format.
+The gene of interest is an HGNC symbol in the form of a character string. ControlRNA and MutantRNA should be dataframes with gene names for rownames and sample IDs for column names. We expect the gene names to be the same for both dataframes, and we expect the gene names to be in the HGNC symbol format.
