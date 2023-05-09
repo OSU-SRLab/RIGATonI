@@ -349,6 +349,7 @@ runRIGATONI <- function(gene, ControlRNA, MasterRNA,
   if (rownames(ControlRNA) != rownames(MasterRNA)) stop('Gene names in ControlRNA are not the same as MasterRNA')
   if (F %in% (rownames(ControlRNA) %in% geneLen$Gene_Symbol)) stop('Genes in ControlRNA are not all present in geneLen file. \nPlease generate your own geneLen file')
   if (!(gene %in% rownames(ControlRNA))) stop('Gene of interest count data is not included in RNA provided')
+  if (!(gene %in% geneLen$Gene_Symbol)) stop('Gene of interest is not included in the default gene lengths dataframe. \nPlease provide your own gene lengths to continue')
   message(paste0('Starting gene: ', gene))
   message('Making Initial Gene List')
   gene_list_ppi = makeGeneList(gene, sdb = sdb)
