@@ -2,16 +2,16 @@
 #' Create an upstream gene list, and a downstream gene list using STRING
 #'
 #' @param gene A character string naming the gene of interest
-#' @param sdb The list of protein interactions (provided)
+#' @param string The list of protein interactions (provided)
 #'
 #' @return A list of two vectors with the upstream and downstream results
 #' @export
-makeGeneList <- function(gene, sdb = sdb) {
+makeGeneList <- function(gene, string = sdb) {
   #sbd is the string database file
   #gene is the name of the gene of interest
   #filter sdb to only include rows which include the gene of interest
-  sdb_goi <- sdb[sdb$item_id_a == gene |
-                   sdb$item_id_b == gene, ]
+  sdb_goi <- string[string$item_id_a == gene |
+                      string$item_id_b == gene, ]
   #remove rows where the acting gene (item_id_a) is absent
   sdb_goi = sdb_goi[!(is.na(sdb_goi$item_id_a)), ]
   #create the upstream database by searching for cases where the acting gene is gene a, the gene being acted on is the gene of interest, and the mode is expression.
@@ -301,19 +301,19 @@ getMutantFunction <- function(Regression, MasterRNA, gene){
 #' @import glmnet
 #' @import DGEobj.utils
 #' @param MasterRNA mutated samples' RNA seq counts where columns are samples and rows are genes
-#' @param lasso_best ElasticNet output to select genes correllated with immune phenotype (provided)
-#' @param m OrdinalForest model to predict immune phenotype (provided)
-#' @param geneLen Dataframe of gene lengths (provided)
+#' @param lasso ElasticNet output to select genes correllated with immune phenotype (provided)
+#' @param model OrdinalForest model to predict immune phenotype (provided)
+#' @param geneLength Dataframe of gene lengths (provided)
 #'
 #' @return A data.frame with sample names (taken from MasterRNA column names) and the predicted immune phenotype
 #' @export
-getImmuneProb <- function(MasterRNA, lasso_best = lasso_best, m = m , geneLen = geneLen){
-  geneLen = geneLen[geneLen$Gene_Symbol %in% rownames(MasterRNA), ]
+getImmuneProb <- function(MasterRNA, lasso = lasso_best, model = m , geneLength = geneLen){
+  geneLen = geneLength[geneLength$Gene_Symbol %in% rownames(MasterRNA), ]
   MasterRNA = MasterRNA[rownames(MasterRNA) %in% geneLen$Gene_Symbol, ]
   geneLen = geneLen[match(rownames(MasterRNA), geneLen$Gene_Symbol), ]
   rnatmp = DGEobj.utils::convertCounts(as.matrix(MasterRNA), 'TPM', geneLen$Length)
   rnatmp = as.data.frame(rnatmp)
-  genes = as.matrix(glmnet::coef.glmnet(lasso_best))
+  genes = as.matrix(glmnet::coef.glmnet(lasso))
   genes = genes[!(genes[, 1] == 0), ]
   genes = names(genes)
   rna = rnatmp[rownames(rnatmp) %in% genes, ]
@@ -321,7 +321,7 @@ getImmuneProb <- function(MasterRNA, lasso_best = lasso_best, m = m , geneLen = 
   rna = apply(rna, 2, scale)
   rna = as.data.frame(t(rna))
   colnames(rna) = col
-  pred <- stats::predict(m, newdata = rna, type = 'class')
+  pred <- stats::predict(model, newdata = rna, type = 'class')
   pred = cbind(rownames(rna), pred$classprobs[, 2])
   pred = as.data.frame(pred)
   colnames(pred) = c('Names', 'Prob')
@@ -334,17 +334,17 @@ getImmuneProb <- function(MasterRNA, lasso_best = lasso_best, m = m , geneLen = 
 #' @param gene A character string naming the gene of interest
 #' @param ControlRNA wild type control RNA seq counts where columns are samples and rows are genes
 #' @param MasterRNA mutated samples' RNA seq counts where columns are samples and rows are genes
-#' @param lasso_best ElasticNet output to select genes correllated with immune phenotype (provided)
-#' @param m OrdinalForest model to predict immune phenotype (provided)
-#' @param geneLen Dataframe of gene lengths (provided)
-#' @param sdb The list of protein interactions (provided)
+#' @param lasso ElasticNet output to select genes correllated with immune phenotype (provided)
+#' @param model OrdinalForest model to predict immune phenotype (provided)
+#' @param geneLength Dataframe of gene lengths (provided)
+#' @param string The list of protein interactions (provided)
 #'
 #' @return A data.frame with sample names (taken from MasterRNA column names), function prediction, and the predicted immune phenotype
 #' @export
 runRIGATONI <- function(gene, ControlRNA, MasterRNA,
-                        lasso_best = lasso_best, m = m,
-                        geneLen = geneLen,
-                        sdb = sdb){
+                        lasso = lasso_best, model = m,
+                        geneLength = geneLen,
+                        string = sdb){
   if (any(class(ControlRNA) != 'data.frame' | class(MasterRNA) != 'data.frame')) stop('RNA files should be data.frame objects')
   if (rownames(ControlRNA) != rownames(MasterRNA)) stop('Gene names in ControlRNA are not the same as MasterRNA')
   if (F %in% (rownames(ControlRNA) %in% geneLen$Gene_Symbol)) stop('Genes in ControlRNA are not all present in geneLen file. \nPlease generate your own geneLen file')
@@ -352,14 +352,14 @@ runRIGATONI <- function(gene, ControlRNA, MasterRNA,
   if (!(gene %in% geneLen$Gene_Symbol)) stop('Gene of interest is not included in the default gene lengths dataframe. \nPlease provide your own gene lengths to continue')
   message(paste0('Starting gene: ', gene))
   message('Making Initial Gene List')
-  gene_list_ppi = makeGeneList(gene, sdb = sdb)
+  gene_list_ppi = makeGeneList(gene, string = sdb)
   if (length(unlist(gene_list_ppi)) > 0) stop('Sadly, we do not have enough protein connections in STRING to analyze you gene-of-interest using runRIGATONI. \nPlease investigate other RIGATONI functions to see if another analysis process would be more suitable.')
   message('Building regression model')
   Regression <- suppressWarnings(getRegression(gene_list_ppi, gene, ControlRNA))
   message('Predicting mutant function')
   Mutant_Function <- suppressWarnings(getMutantFunction(Regression, MasterRNA, gene))
   message('Predicting immune phenotype')
-  ImmuneProb <- suppressMessages(getImmuneProb(MasterRNA, lasso_best = lasso_best, m = m, geneLen = geneLen))
+  ImmuneProb <- suppressMessages(getImmuneProb(MasterRNA, lasso = lasso_best, model = m, geneLength = geneLen))
   message('Getting final output')
   out = cbind(colnames(MasterRNA), Mutant_Function[, 2], ImmuneProb[, 2])
   colnames(out) = c('SampleID', 'Function', 'ImmunePhenotype')

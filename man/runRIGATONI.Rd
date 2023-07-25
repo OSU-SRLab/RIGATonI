@@ -8,10 +8,10 @@ runRIGATONI(
   gene,
   ControlRNA,
   MasterRNA,
-  lasso_best = lasso_best,
-  m = m,
-  geneLen = geneLen,
-  sdb = sdb
+  lasso = lasso_best,
+  model = m,
+  geneLength = geneLen,
+  string = sdb
 )
 }
 \arguments{
@@ -21,13 +21,13 @@ runRIGATONI(
 
 \item{MasterRNA}{mutated samples' RNA seq counts where columns are samples and rows are genes}
 
-\item{lasso_best}{ElasticNet output to select genes correllated with immune phenotype (provided)}
+\item{lasso}{ElasticNet output to select genes correllated with immune phenotype (provided)}
 
-\item{m}{OrdinalForest model to predict immune phenotype (provided)}
+\item{model}{OrdinalForest model to predict immune phenotype (provided)}
 
-\item{geneLen}{Dataframe of gene lengths (provided)}
+\item{geneLength}{Dataframe of gene lengths (provided)}
 
-\item{sdb}{The list of protein interactions (provided)}
+\item{string}{The list of protein interactions (provided)}
 }
 \value{
 A data.frame with sample names (taken from MasterRNA column names), function prediction, and the predicted immune phenotype

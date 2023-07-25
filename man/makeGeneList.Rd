@@ -4,12 +4,12 @@
 \alias{makeGeneList}
 \title{Create an upstream gene list, and a downstream gene list using STRING}
 \usage{
-makeGeneList(gene, sdb = sdb)
+makeGeneList(gene, string = sdb)
 }
 \arguments{
 \item{gene}{A character string naming the gene of interest}
 
-\item{sdb}{The list of protein interactions (provided)}
+\item{string}{The list of protein interactions (provided)}
 }
 \value{
 A list of two vectors with the upstream and downstream results

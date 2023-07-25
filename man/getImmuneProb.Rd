@@ -4,16 +4,16 @@
 \alias{getImmuneProb}
 \title{Predict immune phenotype within mutant samples}
 \usage{
-getImmuneProb(MasterRNA, lasso_best = lasso_best, m = m, geneLen = geneLen)
+getImmuneProb(MasterRNA, lasso = lasso_best, model = m, geneLength = geneLen)
 }
 \arguments{
 \item{MasterRNA}{mutated samples' RNA seq counts where columns are samples and rows are genes}
 
-\item{lasso_best}{ElasticNet output to select genes correllated with immune phenotype (provided)}
+\item{lasso}{ElasticNet output to select genes correllated with immune phenotype (provided)}
 
-\item{m}{OrdinalForest model to predict immune phenotype (provided)}
+\item{model}{OrdinalForest model to predict immune phenotype (provided)}
 
-\item{geneLen}{Dataframe of gene lengths (provided)}
+\item{geneLength}{Dataframe of gene lengths (provided)}
 }
 \value{
 A data.frame with sample names (taken from MasterRNA column names) and the predicted immune phenotype
