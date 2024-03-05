@@ -6,7 +6,7 @@ devtools::install_github('OSU-SRLab/RIGATONI')
 ```
 For detailed information regarding the functions and steps described below, please refer to the RIGATonI Manuscript at https://www.biorxiv.org/content/10.1101/2024.03.02.583103v1
 
-R v >4.1 is required.
+R version 4.1 or greater is required.
 
 ## 2.0: Run RIGATONI step by step
 ### 2.1: Make Gene List
