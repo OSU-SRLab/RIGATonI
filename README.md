@@ -4,18 +4,24 @@ To install RIGATONI please use the code below.
 ```{r}
 devtools::install_github('OSU-SRLab/RIGATONI')
 ```
+For detailed information regarding the functions and steps described below, please refer to the RIGATonI Manuscript at https://www.biorxiv.org/content/10.1101/2024.03.02.583103v1
+
+R v >4.1 is required.
+
 ## 2.0: Run RIGATONI step by step
 ### 2.1: Make Gene List
 RIGATONI helps you assess whether there is a functional change in a gene based on expression data. To get started, you should create two gene lists to assess the function of your gene of interest. You can either make them manually or use the function makeGeneList() below.
 ```{r}
 makeGeneList('TP53')
 ```
-makeGeneList takes an argument of a gene name in the form of a string (HGNC symbols) and uses the STRING database as default to create two gene lists.
-If you would perfer to make your own upstream and downstream gene lists, you can using the example code below as a template.
+makeGeneList takes an argument of a gene name in the form of a string (HGNC symbols) and uses the STRING database as default to create two gene lists. We recommend using the makeGeneList unless you have detailed and extensive knowledge of the gene of the interest or would like to assess the impact of the gene of interest on non-canonical pathways or genes.
+If you would perfer to make your own upstream and downstream gene lists, you can using the example code below as a template. All genes should be written in capital letters.
+Upstream genes refer to genes which act on the gene of interest and affect the expression of the gene of interest directly.
+Downstream genes refer to genes on which the gene of interest acts in any capacity.
 ```{r}
 gene_list = list()
-gene_list['upstream'] <- c('my', 'upstream', 'genes')
-gene_list['downstream'] <- c('my', 'downstream', 'genes')
+gene_list['upstream'] <- c('MY', 'UPSTREAM', 'GENES')
+gene_list['downstream'] <- c('MY', 'DOWNSTREAM', 'GENES')
 ```
 Make sure your genes are in the same format as your gene expression file.
 ### 2.2: Predicting Function
