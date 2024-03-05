@@ -8,6 +8,8 @@ For detailed information regarding the functions and steps described below, plea
 
 R version 4.1 or greater is required.
 
+Skip to Section 3.0 to run RIGATONI with default settings. For detailed steps should errors arise, please refer to Section 2.0.
+
 ## 2.0: Run RIGATONI step by step
 ### 2.1: Make Gene List
 RIGATONI helps you assess whether there is a functional change in a gene based on expression data. To get started, you should create two gene lists to assess the function of your gene of interest. You can either make them manually or use the function makeGeneList() below.
