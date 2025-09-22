@@ -2,7 +2,7 @@
 ## 1.0: Installation
 To install RIGATONI please use the code below.
 ```{r}
-devtools::install_github('OSU-SRLab/RIGATONI')
+devtools::install_github('OSU-SRLab/RIGATonI')
 ```
 For detailed information regarding the functions and steps described below, please refer to the RIGATonI Manuscript at https://www.biorxiv.org/content/10.1101/2024.03.02.583103v1
 
