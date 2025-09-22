@@ -34,7 +34,7 @@ Function <- getMutantFunction(Regression, MutantRNA, gene_of_interest)
 ```
 ControlRNA and MutantRNA should be dataframes with rownames as gene names and colunm names as sample IDs. The gene_list can be made either through makeGeneList() or manually (see 'Make Gene List' for more information).
 ### 2.3: Predicting Immune phenotype
-Immune phenotype predictions are provided as a probability that a given sample is "hot" or inflammed. To run this function, all that is needed is a dataframe of gene counts where rownames are gene names (HGNC symbols) and column names are sample IDs. Please follow the template shown below.
+Immune phenotype predictions are annotations of "High" or "Low" immune advatantage. Another possible annotation is "Ind" which indicates the given sample does not allign with either RIGATonI-High or RIGATonI-Low annotations. To run this function, all that is needed is a dataframe of gene counts where rownames are gene names (HGNC symbols) and column names are sample IDs. Please follow the template shown below.
 ```{r}
 getImmuneProb(MutantRNA)
 ```
