@@ -8,9 +8,9 @@ runRIGATonI(
   gene,
   ControlRNA,
   MasterRNA,
-  mod_l = mod_l,
-  mod_h = mod_h,
-  genes = genes,
+  model_l = mod_l,
+  model_h = mod_h,
+  use_genes = genes,
   string = sdb,
   geneList = NULL
 )
@@ -22,11 +22,11 @@ runRIGATonI(
 
 \item{MasterRNA}{mutated samples' RNA seq counts where columns are samples and rows are genes}
 
-\item{mod_l}{Model to predict Low immune advantage immune phenotype (provided)}
+\item{model_l}{Model to predict Low immune advantage immune phenotype (provided)}
 
-\item{mod_h}{Model to predict High immune advantage immune phenotype (provided)}
+\item{model_h}{Model to predict High immune advantage immune phenotype (provided)}
 
-\item{genes}{genes to predict Low immune advantage immune phenotype (provided)}
+\item{use_genes}{genes to predict Low immune advantage immune phenotype (provided)}
 
 \item{string}{The list of protein interactions (default provided)}
 

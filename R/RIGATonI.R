@@ -303,24 +303,23 @@ getMutantFunction <- function(Regression, MasterRNA, gene){
 
 #' Predict immune phenotype
 #'
-#' @import pamr
-#' @import adabag
 #' @param MasterRNA samples' RNA seq transcripts per million where columns are samples and rows are genes
-#' @param mod_l Model to predict Low immune advantage immune phenotype (provided)
-#' @param mod_h Model to predict High immune advantage immune phenotype (provided)
-#' @param genes genes to predict Low immune advantage immune phenotype (provided)
+#' @param model_l Model to predict Low immune advantage immune phenotype (provided)
+#' @param model_h Model to predict High immune advantage immune phenotype (provided)
+#' @param use_genes genes to predict Low immune advantage immune phenotype (provided)
 #' @importFrom stats predict
+#' @importFrom pamr pamr.predict
 #'
 #' @return A data.frame with sample names (taken from MasterRNA column names) and the predicted immune phenotype
 #' @export
-getImmuneProb <- function(MasterRNA, mod_l = mod_l, mod_h = mod_h, genes = genes) {
+getImmuneProb <- function(MasterRNA, model_l = mod_l, model_h = mod_h, use_genes = genes) {
   
   #scale the RNA and transpose it
   MasterRNA = t(scale(MasterRNA))
   
   # get class probabilities
-  predictions = data.frame(High = pamr.predict(mod_h, t(MasterRNA[, genes$High]), threshold = 0, type = 'posterior')[, 1],
-                           Low = predict(mod_l, MasterRNA[, genes$Low], type = 'prob')[, 1])
+  predictions = data.frame(High = pamr.predict(model_h, t(MasterRNA[, use_genes$High]), threshold = 0, type = 'posterior')[, 1],
+                           Low = predict(model_l, MasterRNA[, use_genes$Low], type = 'prob')[, 1])
   
   # pick the right prediction for each row
   pred = unlist(lapply(1:nrow(predictions), function(x){
@@ -367,7 +366,7 @@ getImmuneProb <- function(MasterRNA, mod_l = mod_l, mod_h = mod_h, genes = genes
 #' @return A list with the elements Function (function annotation of variant), p.val.func (p value of function annotation), ImmunePhenotype (immune phenotype annotation of variant), and p.val.immune (p value of immune phenotype annotation)
 #' @export
 evaluateMutants <- function(Function, ImmuneProb, ControlRNA){
-  con = suppressMessages(getImmuneProb(ControlRNA, mod_l = mod_l, mod_h = mod_h, genes = genes))
+  con = suppressMessages(getImmuneProb(ControlRNA, model_l = mod_l, model_h = mod_h, use_genes = genes))
   nGOF = nrow(Function[Function[, 2] == 'GOF', ])
   nLOF = nrow(Function[Function[, 2] == 'LOF', ])
   nHigh = nrow(ImmuneProb[ImmuneProb[, 2] == 'High', ])
@@ -390,18 +389,18 @@ evaluateMutants <- function(Function, ImmuneProb, ControlRNA){
 #' @param gene A character string naming the gene of interest
 #' @param ControlRNA wild type control RNA seq counts where columns are samples and rows are genes
 #' @param MasterRNA mutated samples' RNA seq counts where columns are samples and rows are genes
-#' @param mod_l Model to predict Low immune advantage immune phenotype (provided)
-#' @param mod_h Model to predict High immune advantage immune phenotype (provided)
-#' @param genes genes to predict Low immune advantage immune phenotype (provided)
+#' @param model_l Model to predict Low immune advantage immune phenotype (provided)
+#' @param model_h Model to predict High immune advantage immune phenotype (provided)
+#' @param use_genes genes to predict Low immune advantage immune phenotype (provided)
 #' @param string The list of protein interactions (default provided)
 #' @param geneList list of upstream and downstream genes to use to predict mutant function. Default value is NULL and geneList will be built using STRING database.
 #'
 #' @return A data.frame with sample names (taken from MasterRNA column names), function prediction, and the predicted immune phenotype
 #' @export
 runRIGATonI <- function(gene, ControlRNA, MasterRNA,
-                        mod_l = mod_l,
-                        mod_h = mod_h,
-                        genes = genes,
+                        model_l = mod_l, 
+                        model_h = mod_h, 
+                        use_genes = genes,
                         string = sdb,
                         geneList = NULL){
   if (any(class(ControlRNA) != 'data.frame', class(MasterRNA) != 'data.frame')) stop('RNA files should be data.frame objects')
@@ -432,7 +431,7 @@ runRIGATonI <- function(gene, ControlRNA, MasterRNA,
   message('Predicting mutant function')
   Mutant_Function <- suppressWarnings(getMutantFunction(Regression, MasterRNA, gene))
   message('Predicting immune phenotype')
-  ImmuneProb <- suppressMessages(getImmuneProb(MasterRNA, mod_l = mod_l, mod_h = mod_h, genes = genes))
+  ImmuneProb <- suppressMessages(getImmuneProb(MasterRNA, model_l = mod_l, model_h = mod_h, use_genes = genes))
   message('Getting final output')
   out = cbind(colnames(MasterRNA), Mutant_Function[, 2], ImmuneProb[, 2])
   colnames(out) = c('SampleID', 'Function', 'ImmunePhenotype')

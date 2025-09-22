@@ -18,7 +18,6 @@ Depends:
     R (>= 3.5),
     pamr,
     ciTools,
-    stats,
-    adabag
+    stats
 LazyDataCompression: xz
 RoxygenNote: 7.3.2

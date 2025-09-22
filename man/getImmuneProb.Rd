@@ -4,16 +4,16 @@
 \alias{getImmuneProb}
 \title{Predict immune phenotype}
 \usage{
-getImmuneProb(MasterRNA, mod_l = mod_l, mod_h = mod_h, genes = genes)
+getImmuneProb(MasterRNA, model_l = mod_l, model_h = mod_h, use_genes = genes)
 }
 \arguments{
 \item{MasterRNA}{samples' RNA seq transcripts per million where columns are samples and rows are genes}
 
-\item{mod_l}{Model to predict Low immune advantage immune phenotype (provided)}
+\item{model_l}{Model to predict Low immune advantage immune phenotype (provided)}
 
-\item{mod_h}{Model to predict High immune advantage immune phenotype (provided)}
+\item{model_h}{Model to predict High immune advantage immune phenotype (provided)}
 
-\item{genes}{genes to predict Low immune advantage immune phenotype (provided)}
+\item{use_genes}{genes to predict Low immune advantage immune phenotype (provided)}
 }
 \value{
 A data.frame with sample names (taken from MasterRNA column names) and the predicted immune phenotype
